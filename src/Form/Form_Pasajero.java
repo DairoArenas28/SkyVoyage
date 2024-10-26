@@ -177,6 +177,14 @@ public class Form_Pasajero extends javax.swing.JFrame {
         try {
             String nombre = TxtNombre.getText();
             String documento = TxtDocumento.getText();
+            if(nombre.equals("")){
+                JOptionPane.showMessageDialog(this, "Por favor, digita un nombre", "Alerta", JOptionPane.ERROR_MESSAGE);
+                return;
+            } 
+            if(documento.equals("")){
+                JOptionPane.showMessageDialog(this, "Por favor, digita un documento", "Alerta", JOptionPane.ERROR_MESSAGE);
+                return;
+            } 
             // Verificar si el ComboBox está habilitado y si se ha seleccionado un asiento
             if (!ComboAsiento.isEnabled() || ComboAsiento.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un asiento válido.", "Error", JOptionPane.ERROR_MESSAGE);

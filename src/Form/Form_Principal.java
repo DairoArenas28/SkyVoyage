@@ -7,6 +7,7 @@ package Form;
 import Clases.Pasajero;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,6 +24,7 @@ public class Form_Principal extends javax.swing.JFrame {
      */
     JCheckBox[] checkBoxesA;
     JCheckBox[] checkBoxesB; 
+    DefaultTableModel model_;
     public Form_Principal() {
         initComponents();
         this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
@@ -88,7 +90,7 @@ public class Form_Principal extends javax.swing.JFrame {
     
     public void AsignarPasajero(HashMap hashmap,Pasajero pasajero) {
         // Crear el DefaultTableModel
-        DefaultTableModel model_ = TableModel(); // Asegúrate de que TableModel() retorne el modelo correctamente
+        model_ = TableModel(); // Asegúrate de que TableModel() retorne el modelo correctamente
 
         // Llenar el modelo con los datos del pasajero
         LLenarModel(model_, pasajero); 
@@ -154,6 +156,7 @@ public class Form_Principal extends javax.swing.JFrame {
         BtnAsignar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         TablePasajero = new javax.swing.JTable();
+        BtnEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,6 +171,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 115, 18, -1));
 
         A1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        A1.setEnabled(false);
         A1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 A1ActionPerformed(evt);
@@ -176,6 +180,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(A1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, -1, -1));
 
         B1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        B1.setEnabled(false);
         B1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B1ActionPerformed(evt);
@@ -184,6 +189,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(B1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, -1, -1));
 
         A2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        A2.setEnabled(false);
         A2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 A2ActionPerformed(evt);
@@ -192,6 +198,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(A2, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 90, -1, -1));
 
         B2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        B2.setEnabled(false);
         B2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B2ActionPerformed(evt);
@@ -200,6 +207,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(B2, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 120, -1, -1));
 
         A3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        A3.setEnabled(false);
         A3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 A3ActionPerformed(evt);
@@ -208,6 +216,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(A3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 90, -1, -1));
 
         B3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        B3.setEnabled(false);
         B3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B3ActionPerformed(evt);
@@ -216,6 +225,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(B3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, -1, -1));
 
         A4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        A4.setEnabled(false);
         A4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 A4ActionPerformed(evt);
@@ -224,6 +234,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(A4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 90, -1, -1));
 
         B4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        B4.setEnabled(false);
         B4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B4ActionPerformed(evt);
@@ -232,6 +243,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(B4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, -1, -1));
 
         A5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        A5.setEnabled(false);
         A5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 A5ActionPerformed(evt);
@@ -240,6 +252,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jPanel1.add(A5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, -1, -1));
 
         B5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        B5.setEnabled(false);
         B5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B5ActionPerformed(evt);
@@ -296,6 +309,14 @@ public class Form_Principal extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(TablePasajero);
 
+        BtnEliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtnEliminar.setText("Eliminar");
+        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -307,7 +328,9 @@ public class Form_Principal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(56, 56, 56)
-                        .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -316,7 +339,10 @@ public class Form_Principal extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
@@ -380,6 +406,24 @@ public class Form_Principal extends javax.swing.JFrame {
         pasajero.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//GEN-LAST:event_BtnAsignarActionPerformed
 
+    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+        int filaseleccionada = TablePasajero.getSelectedRow();
+        String asientoPasajero;
+        //tableEstudiante.remove
+        model_ = TableModel();
+        
+        asientoPasajero = model_.getValueAt(filaseleccionada, 2).toString();
+        
+        hashmap.put(asientoPasajero,"0");
+        
+        ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
+        //System.out.println(asientoPasajero);
+        if(filaseleccionada != -1){
+            model_.removeRow(filaseleccionada);
+        }
+        JOptionPane.showMessageDialog(null, "Registro eliminado");
+    }//GEN-LAST:event_BtnEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -427,6 +471,7 @@ public class Form_Principal extends javax.swing.JFrame {
     private javax.swing.JCheckBox B4;
     private javax.swing.JCheckBox B5;
     private javax.swing.JButton BtnAsignar;
+    private javax.swing.JButton BtnEliminar;
     private javax.swing.JTable TablePasajero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
