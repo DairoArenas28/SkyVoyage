@@ -4,30 +4,39 @@
  */
 package Clases;
 
-import com.sun.jdi.connect.spi.Connection;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Dairo Arenas
  */
 public class ConnectionDB {
-    private String connectionURL;
-    private Connection conn = null;
+    private String database;
+    private String user;
+    private String password;
 
-    PreparedStatement stmt = null;
-    String sDriver = "com.mysql.jdbc.Driver";
-    String sURL = "jdbc:mysql://localhost:3306/lineadecodigo";
-    
-    public ConnectionDB(String connectionURL) {
-        this.connectionURL = connectionURL;
+    public ConnectionDB(String database_, String user_, String password_ ) {
+        this.database = database_;
+        this.user = user_;
+        this.password = password_;
     }
-    
-    public Connection Connection(){
-        try{
-            conn = DriverManager.getConnection(sURL,"root","");
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return null;
+   
+  
+    String url = "jdbc:sqlserver://localhost:1433;database="+database;
+
+    public void Connection(){
+       try {
+       Connection  connection = DriverManager.getConnection(url,user,password);
+       if (connection != null) {
+              System.out.println("Conexión exitosa a la base de datos.");
+          }
+
+       } catch (SQLException e) {
+           //JOptionPane.showMessageDialog(null,"Error en la conexion " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+           System.out.println(e.getMessage());
+       }
     }
 }

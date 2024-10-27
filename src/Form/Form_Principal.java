@@ -4,7 +4,9 @@
  */
 package Form;
 
+import Clases.ConnectionDB;
 import Clases.Pasajero;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -25,12 +27,19 @@ public class Form_Principal extends javax.swing.JFrame {
     JCheckBox[] checkBoxesA;
     JCheckBox[] checkBoxesB; 
     DefaultTableModel model_;
+    
+    String database = "Facturacion";
+    String user = "root";
+    String password = "";
+    
+    ConnectionDB conn = new ConnectionDB(database,user,password);
+    
     public Form_Principal() {
         initComponents();
         this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
         this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};
         this.setLocationRelativeTo(null);
-        
+        conn.Connection();
         
 
         LlenarAsiento(hashmap);
