@@ -5,7 +5,8 @@
 package Form;
 
 import Clases.ConnectionDB;
-import Clases.Pasajero;
+import Entidad.Pasajero;
+import java.awt.FlowLayout;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
@@ -24,24 +25,26 @@ public class Form_Principal extends javax.swing.JFrame {
     /**
      * Creates new form Form_Principal
      */
+    JCheckBox[] checkBoxes;
     JCheckBox[] checkBoxesA;
     JCheckBox[] checkBoxesB; 
     DefaultTableModel model_;
     
     String database = "Facturacion";
-    String user = "root";
-    String password = "";
+    String user = "sa";
+    String password = "12345";
     
     ConnectionDB conn = new ConnectionDB(database,user,password);
     
     public Form_Principal() {
         initComponents();
-        this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
-        this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};
+        this.checkBoxes = new JCheckBox[100];
+        //this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
+        //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};
         this.setLocationRelativeTo(null);
         conn.Connection();
         
-
+        GenerarAvion();
         LlenarAsiento(hashmap);
         
         
@@ -90,7 +93,22 @@ public class Form_Principal extends javax.swing.JFrame {
             // Asigna "0" a las entradas A0, A1, ..., A4 (disponible)
             hashmap.put("A" + i, "0"); // Asignar "0" para indicar que está disponible
             hashmap.put("B" + i, "0"); // Asignar "0" para indicar que está disponible
+            
         }
+    }
+    
+    public void GenerarAvion(){
+        Avion.setLayout(new FlowLayout()); 
+        for(int i = 0; i < 100; i++){
+            checkBoxes[i] = new JCheckBox();
+            checkBoxes[i].setSelected(false);
+            checkBoxes[i].setEnabled(false);
+            checkBoxes[i].setName("Asiento"+(i+1));
+
+            //checkBoxes[i].setLocation(50, 150);
+            Avion.add(checkBoxes[i]);
+        }
+        
     }
     
     public static void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
@@ -144,153 +162,17 @@ public class Form_Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        A1 = new javax.swing.JCheckBox();
-        B1 = new javax.swing.JCheckBox();
-        A2 = new javax.swing.JCheckBox();
-        B2 = new javax.swing.JCheckBox();
-        A3 = new javax.swing.JCheckBox();
-        B3 = new javax.swing.JCheckBox();
-        A4 = new javax.swing.JCheckBox();
-        B4 = new javax.swing.JCheckBox();
-        A5 = new javax.swing.JCheckBox();
-        B5 = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        Avion = new javax.swing.JLabel();
         BtnAsignar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         TablePasajero = new javax.swing.JTable();
         BtnEliminar = new javax.swing.JButton();
+        PanelCheckBox = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setText("A");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 85, 18, -1));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("B");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 115, 18, -1));
-
-        A1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        A1.setEnabled(false);
-        A1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                A1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(A1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, -1, -1));
-
-        B1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        B1.setEnabled(false);
-        B1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(B1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, -1, -1));
-
-        A2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        A2.setEnabled(false);
-        A2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                A2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(A2, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 90, -1, -1));
-
-        B2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        B2.setEnabled(false);
-        B2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(B2, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 120, -1, -1));
-
-        A3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        A3.setEnabled(false);
-        A3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                A3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(A3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 90, -1, -1));
-
-        B3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        B3.setEnabled(false);
-        B3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(B3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, -1, -1));
-
-        A4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        A4.setEnabled(false);
-        A4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                A4ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(A4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 90, -1, -1));
-
-        B4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        B4.setEnabled(false);
-        B4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B4ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(B4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, -1, -1));
-
-        A5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        A5.setEnabled(false);
-        A5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                A5ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(A5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, -1, -1));
-
-        B5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        B5.setEnabled(false);
-        B5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B5ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(B5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setText("0");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 150, 18, -1));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel4.setText("1");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 150, 18, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel5.setText("2");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(195, 150, 18, -1));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel6.setText("3");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(335, 150, 18, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel7.setText("4");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(375, 150, 18, -1));
-
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/avion.png"))); // NOI18N
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 230));
+        jPanel1.add(Avion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 230));
 
         BtnAsignar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         BtnAsignar.setText("Asignar Asiento");
@@ -326,6 +208,17 @@ public class Form_Principal extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout PanelCheckBoxLayout = new javax.swing.GroupLayout(PanelCheckBox);
+        PanelCheckBox.setLayout(PanelCheckBoxLayout);
+        PanelCheckBoxLayout.setHorizontalGroup(
+            PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 185, Short.MAX_VALUE)
+        );
+        PanelCheckBoxLayout.setVerticalGroup(
+            PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -336,10 +229,15 @@ public class Form_Principal extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(56, 56, 56)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -351,7 +249,9 @@ public class Form_Principal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
@@ -359,46 +259,6 @@ public class Form_Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void A1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_A1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_A1ActionPerformed
-
-    private void B1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_B1ActionPerformed
-
-    private void A2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_A2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_A2ActionPerformed
-
-    private void B2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_B2ActionPerformed
-
-    private void A3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_A3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_A3ActionPerformed
-
-    private void B3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_B3ActionPerformed
-
-    private void A4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_A4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_A4ActionPerformed
-
-    private void B4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_B4ActionPerformed
-
-    private void A5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_A5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_A5ActionPerformed
-
-    private void B5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_B5ActionPerformed
 
     private void BtnAsignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAsignarActionPerformed
     
@@ -469,27 +329,11 @@ public class Form_Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox A1;
-    private javax.swing.JCheckBox A2;
-    private javax.swing.JCheckBox A3;
-    private javax.swing.JCheckBox A4;
-    private javax.swing.JCheckBox A5;
-    private javax.swing.JCheckBox B1;
-    private javax.swing.JCheckBox B2;
-    private javax.swing.JCheckBox B3;
-    private javax.swing.JCheckBox B4;
-    private javax.swing.JCheckBox B5;
+    private javax.swing.JLabel Avion;
     private javax.swing.JButton BtnAsignar;
     private javax.swing.JButton BtnEliminar;
+    private javax.swing.JPanel PanelCheckBox;
     private javax.swing.JTable TablePasajero;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables

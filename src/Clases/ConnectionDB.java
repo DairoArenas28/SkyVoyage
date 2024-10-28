@@ -25,7 +25,7 @@ public class ConnectionDB {
     }
    
   
-    String url = "jdbc:sqlserver://localhost:1433;database="+database;
+    String url = "jdbc:sqlserver://localhost:1433;database=Facturacion;encrypt=true;trustServerCertificate=true;loginTimeout=30;";
 
     public void Connection(){
        try {

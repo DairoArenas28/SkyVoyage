@@ -4,7 +4,7 @@
  */
 package skyvoyage;
 
-import Clases.Pasajero;
+import Entidad.Pasajero;
 import java.util.HashMap;
 import java.util.Scanner;
 

@@ -4,7 +4,7 @@
  */
 package Form;
 
-import Clases.Pasajero;
+import Entidad.Pasajero;
 import Form.Form_Principal;
 import java.awt.Color;
 import java.awt.Component;
