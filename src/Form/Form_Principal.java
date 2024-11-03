@@ -33,21 +33,18 @@ public class Form_Principal extends javax.swing.JFrame {
     String database = "Facturacion";
     String user = "sa";
     String password = "12345";
+    int nAsiento;
     
     ConnectionDB conn = new ConnectionDB(database,user,password);
     
     public Form_Principal() {
+        this.checkBoxes = new JCheckBox[0];
         initComponents();
-        this.checkBoxes = new JCheckBox[100];
         //this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
         //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};
         this.setLocationRelativeTo(null);
         conn.Connection();
-        
-        GenerarAvion();
-        LlenarAsiento(hashmap);
-        
-        
+   
 /*for(int j = 0; j < 5; j++){
             System.out.print(hashmap.get("A"+j));
             System.out.print(hashmap.get("B"+j));
@@ -87,9 +84,9 @@ public class Form_Principal extends javax.swing.JFrame {
 
     }
     
-    public static void LlenarAsiento(HashMap hashmap){
+    public static void LlenarAsiento(int nAsientos,HashMap hashmap){
         // Ciclo para recorrer las checkboxes
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < nAsientos; i++) {
             // Asigna "0" a las entradas A0, A1, ..., A4 (disponible)
             hashmap.put("A" + i, "0"); // Asignar "0" para indicar que está disponible
             hashmap.put("B" + i, "0"); // Asignar "0" para indicar que está disponible
@@ -97,9 +94,10 @@ public class Form_Principal extends javax.swing.JFrame {
         }
     }
     
-    public void GenerarAvion(){
+    public void GenerarAvion(int nAsiento){
+        checkBoxes = new JCheckBox[nAsiento];
         Avion.setLayout(new FlowLayout()); 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < nAsiento; i++){
             checkBoxes[i] = new JCheckBox();
             checkBoxes[i].setSelected(false);
             checkBoxes[i].setEnabled(false);
@@ -109,6 +107,18 @@ public class Form_Principal extends javax.swing.JFrame {
             Avion.add(checkBoxes[i]);
         }
         
+    }
+    
+    public void EliminarAvion(){
+        Avion.setLayout(new FlowLayout()); 
+        if (checkBoxes.length > 0) {
+            for (JCheckBox checkBox : checkBoxes) {
+                Avion.remove(checkBox); // Quita el checkbox del contenedor
+            }
+            Avion.revalidate(); // Actualiza el contenedor después de quitar componentes
+            Avion.updateUI();// Refresca el contenedor en pantalla
+            hashmap.clear(); // Limpia el HashMap
+        }
     }
     
     public static void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
@@ -161,6 +171,8 @@ public class Form_Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         Avion = new javax.swing.JLabel();
         BtnAsignar = new javax.swing.JButton();
@@ -168,6 +180,13 @@ public class Form_Principal extends javax.swing.JFrame {
         TablePasajero = new javax.swing.JTable();
         BtnEliminar = new javax.swing.JButton();
         PanelCheckBox = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        nAsientos = new javax.swing.JTextField();
+        btnGenerar = new javax.swing.JButton();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,15 +227,43 @@ public class Form_Principal extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Cantidad Asientos");
+
+        nAsientos.setText("0");
+
+        btnGenerar.setBackground(new java.awt.Color(153, 255, 153));
+        btnGenerar.setText("Generar");
+        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelCheckBoxLayout = new javax.swing.GroupLayout(PanelCheckBox);
         PanelCheckBox.setLayout(PanelCheckBoxLayout);
         PanelCheckBoxLayout.setHorizontalGroup(
             PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 185, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addGap(38, 38, 38))))
+                .addContainerGap())
         );
         PanelCheckBoxLayout.setVerticalGroup(
             PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(PanelCheckBoxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nAsientos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnGenerar)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -238,7 +285,7 @@ public class Form_Principal extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,6 +340,15 @@ public class Form_Principal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Registro eliminado");
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
+    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+        // TODO add your handling code here:
+        nAsiento = Integer.parseInt(nAsientos.getText());
+        EliminarAvion();
+        GenerarAvion(nAsiento);
+        LlenarAsiento(nAsiento,hashmap);
+        Avion.updateUI();
+    }//GEN-LAST:event_btnGenerarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -334,7 +390,12 @@ public class Form_Principal extends javax.swing.JFrame {
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JPanel PanelCheckBox;
     private javax.swing.JTable TablePasajero;
+    private javax.swing.JButton btnGenerar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField nAsientos;
     // End of variables declaration//GEN-END:variables
 }
