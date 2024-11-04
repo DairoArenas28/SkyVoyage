@@ -4,7 +4,8 @@
  */
 package Form;
 
-import Clases.ConnectionDB;
+import Clases.DatabaseConnection;
+import Entidad.Avion;
 import Entidad.Pasajero;
 import java.awt.FlowLayout;
 import java.sql.Connection;
@@ -30,101 +31,33 @@ public class Form_Principal extends javax.swing.JFrame {
     JCheckBox[] checkBoxesB; 
     DefaultTableModel model_;
     
+    String url = "jdbc:sqlserver://localhost:1433;";
     String database = "Facturacion";
     String user = "sa";
-    String password = "12345";
+    String password = "123456789";
     int nAsiento;
     
-    ConnectionDB conn = new ConnectionDB(database,user,password);
+    DatabaseConnection conn = new DatabaseConnection(url,database,user,password);
+    
+    Avion avion = new Avion();
     
     public Form_Principal() {
         this.checkBoxes = new JCheckBox[0];
         initComponents();
         //this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
-        //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};
+        //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};g
         this.setLocationRelativeTo(null);
-        conn.Connection();
-   
-/*for(int j = 0; j < 5; j++){
-            System.out.print(hashmap.get("A"+j));
-            System.out.print(hashmap.get("B"+j));
-        }*/
+       
         
-    }
-    public final void DesmarcarCheckBoxes(JCheckBox[] checkBoxesA,JCheckBox[] checkBoxesB) {
-        // Desmarcar todos los checkboxes en checkBoxesA
-        for (JCheckBox checkBox : checkBoxesA) {
-            if (checkBox != null) {
-                checkBox.setSelected(false);
+        try(Connection con = conn.Connection()){
+            if(con != null ){
+                System.out.println("Conexión exitosa");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        // Desmarcar todos los checkboxes en checkBoxesB
-        for (JCheckBox checkBox : checkBoxesB) {
-            if (checkBox != null) {
-                checkBox.setSelected(false);
-            }
-        }
-    }
-    public final void ValidarAsiento(HashMap hashmap, JCheckBox[] checkBoxesA, JCheckBox[] checkBoxesB){
-        for (int i = 0; i < 5; i++) {
-            if (hashmap.get("A" + i).equals("0")) { 
-                checkBoxesA[i].setSelected(false); // Deselecciona si es "0"
-            } else {
-                checkBoxesA[i].setSelected(true); // Selecciona si es "1"
-            }
-
-            // Verificar y asignar el estado de los checkboxes de B
-            if (hashmap.get("B" + i).equals("0")) { 
-                checkBoxesB[i].setSelected(false); // Deselecciona si es "0"
-            } else {
-                checkBoxesB[i].setSelected(true); // Selecciona si es "1"
-            }
-        }
-
-    }
-    
-    public static void LlenarAsiento(int nAsientos,HashMap hashmap){
-        // Ciclo para recorrer las checkboxes
-        for (int i = 0; i < nAsientos; i++) {
-            // Asigna "0" a las entradas A0, A1, ..., A4 (disponible)
-            hashmap.put("A" + i, "0"); // Asignar "0" para indicar que está disponible
-            hashmap.put("B" + i, "0"); // Asignar "0" para indicar que está disponible
-            
-        }
-    }
-    
-    public void GenerarAvion(int nAsiento){
-        checkBoxes = new JCheckBox[nAsiento];
-        Avion.setLayout(new FlowLayout()); 
-        for(int i = 0; i < nAsiento; i++){
-            checkBoxes[i] = new JCheckBox();
-            checkBoxes[i].setSelected(false);
-            checkBoxes[i].setEnabled(false);
-            checkBoxes[i].setName("Asiento"+(i+1));
-
-            //checkBoxes[i].setLocation(50, 150);
-            Avion.add(checkBoxes[i]);
-        }
-        
-    }
-    
-    public void EliminarAvion(){
-        Avion.setLayout(new FlowLayout()); 
-        if (checkBoxes.length > 0) {
-            for (JCheckBox checkBox : checkBoxes) {
-                Avion.remove(checkBox); // Quita el checkbox del contenedor
-            }
-            Avion.revalidate(); // Actualiza el contenedor después de quitar componentes
-            Avion.updateUI();// Refresca el contenedor en pantalla
-            hashmap.clear(); // Limpia el HashMap
-        }
-    }
-    
-    public static void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
-        hashmap.put(pasajero.getAsiento(),"1");
-    }
-    
     public void AsignarPasajero(HashMap hashmap,Pasajero pasajero) {
         // Crear el DefaultTableModel
         model_ = TableModel(); // Asegúrate de que TableModel() retorne el modelo correctamente
@@ -136,10 +69,10 @@ public class Form_Principal extends javax.swing.JFrame {
         TablePasajero.setModel(model_);
 
         // Actualizar los asientos en el HashMap según el pasajero
-        LlenarAsiento(hashmap, pasajero);
+        //LlenarAsiento(hashmap, pasajero);
 
         // Validar y actualizar el estado de los JCheckBox según el HashMap
-        ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
+        //ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
         
     }
     
@@ -243,15 +176,14 @@ public class Form_Principal extends javax.swing.JFrame {
         PanelCheckBox.setLayout(PanelCheckBoxLayout);
         PanelCheckBoxLayout.setHorizontalGroup(
             PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
+            .addGroup(PanelCheckBoxLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(38, 38, 38))))
+                    .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(38, 38, 38)))
                 .addContainerGap())
         );
         PanelCheckBoxLayout.setVerticalGroup(
@@ -263,7 +195,7 @@ public class Form_Principal extends javax.swing.JFrame {
                 .addComponent(nAsientos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGenerar)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -285,7 +217,7 @@ public class Form_Principal extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,7 +264,7 @@ public class Form_Principal extends javax.swing.JFrame {
         
         hashmap.put(asientoPasajero,"0");
         
-        ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
+        //ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
         //System.out.println(asientoPasajero);
         if(filaseleccionada != -1){
             model_.removeRow(filaseleccionada);
@@ -343,9 +275,9 @@ public class Form_Principal extends javax.swing.JFrame {
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         // TODO add your handling code here:
         nAsiento = Integer.parseInt(nAsientos.getText());
-        EliminarAvion();
-        GenerarAvion(nAsiento);
-        LlenarAsiento(nAsiento,hashmap);
+        //EliminarAvion();
+        //GenerarAvion(nAsiento);
+        //LlenarAsiento(nAsiento,hashmap);
         Avion.updateUI();
     }//GEN-LAST:event_btnGenerarActionPerformed
 
