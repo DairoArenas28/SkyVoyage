@@ -27,8 +27,6 @@ public class Form_Principal extends javax.swing.JFrame {
      * Creates new form Form_Principal
      */
     JCheckBox[] checkBoxes;
-    JCheckBox[] checkBoxesA;
-    JCheckBox[] checkBoxesB; 
     DefaultTableModel model_;
     
     String url = "jdbc:sqlserver://localhost:1433;";
@@ -69,10 +67,10 @@ public class Form_Principal extends javax.swing.JFrame {
         TablePasajero.setModel(model_);
 
         // Actualizar los asientos en el HashMap según el pasajero
-        //LlenarAsiento(hashmap, pasajero);
-
+        avion.LlenarAsiento(hashmap, pasajero);
+        avion.VisualizarHashMap(hashmap);
         // Validar y actualizar el estado de los JCheckBox según el HashMap
-        //ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
+        avion.ValidarAsiento(hashmap,checkBoxes);
         
     }
     
@@ -208,15 +206,11 @@ public class Form_Principal extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -264,7 +258,7 @@ public class Form_Principal extends javax.swing.JFrame {
         
         hashmap.put(asientoPasajero,"0");
         
-        //ValidarAsiento(hashmap,checkBoxesA,checkBoxesB);
+        avion.ValidarAsiento(hashmap,checkBoxes);
         //System.out.println(asientoPasajero);
         if(filaseleccionada != -1){
             model_.removeRow(filaseleccionada);
@@ -273,12 +267,21 @@ public class Form_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-        // TODO add your handling code here:
+        // Recuperar el número de asientos del campo de texto
         nAsiento = Integer.parseInt(nAsientos.getText());
-        //EliminarAvion();
-        //GenerarAvion(nAsiento);
-        //LlenarAsiento(nAsiento,hashmap);
-        Avion.updateUI();
+
+        // Eliminar checkboxes existentes y limpiar el HashMap
+        avion.EliminarAvion(hashmap, checkBoxes, Avion);
+
+        // Generar nuevos checkboxes para los asientos
+        avion.GenerarAvion(nAsiento, checkBoxes, Avion);
+
+        // Llenar los checkboxes con la información del HashMap
+        avion.LlenarAsiento(nAsiento, hashmap);
+
+        // Actualizar la interfaz
+        Avion.revalidate(); // Refresca el contenedor
+        Avion.repaint();    // Asegura que se dibuje correctamente
     }//GEN-LAST:event_btnGenerarActionPerformed
 
     /**

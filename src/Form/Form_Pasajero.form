@@ -28,11 +28,15 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="TxtNombre" alignment="0" max="32767" attributes="0"/>
                   <Component id="TxtDocumento" max="32767" attributes="0"/>
-                  <Component id="ComboAsiento" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel3" alignment="0" min="-2" pref="138" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
                   <Component id="BtnGuardar" min="-2" pref="274" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="ComboAsientoAbecedario" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="ComboAsientoNumero" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace pref="64" max="32767" attributes="0"/>
           </Group>
@@ -52,7 +56,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="ComboAsiento" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="ComboAsientoAbecedario" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ComboAsientoNumero" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="71" max="32767" attributes="0"/>
               <Component id="BtnGuardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
@@ -80,7 +87,7 @@
         <Property name="text" type="java.lang.String" value="Asientos disponibles"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="ComboAsiento">
+    <Component class="javax.swing.JComboBox" name="ComboAsientoAbecedario">
       <Properties>
         <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="hashmap" type="code"/>
@@ -97,6 +104,16 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnGuardarActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="ComboAsientoNumero">
+      <Properties>
+        <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="hashmap" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

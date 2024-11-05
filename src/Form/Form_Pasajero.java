@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
@@ -32,71 +33,116 @@ public class Form_Pasajero extends javax.swing.JFrame {
      * @param hashmap_
      * @param principal
      */
-    public Form_Pasajero(HashMap<String, String> hashmap_,Form_Principal principal) {
+    public Form_Pasajero(HashMap<String, String> hashmap_, Form_Principal principal) {
         try {
-            this.formPrincipal = principal; 
+            this.formPrincipal = principal;
             initComponents();
 
-            hashmap = hashmap_;
+            this.hashmap = hashmap_;
 
-            // Llenar el JComboBox con las claves del HashMap
-            for (String key : hashmap.keySet()) {
-                ComboAsiento.addItem(key); // Agregar todas las claves al JComboBox
+            
+            // Llenar ComboAsientoAbecedario con letras (A-Z) según el HashMap
+            for (char letra = 'A'; letra <= 'Z'; letra++) {
+                String key = String.valueOf(letra);
+                // Solo agregar si existen asientos de esa letra en el hashmap
+                boolean hayAsientos = false;
+                for (int numero = 0; numero < 25; numero++) { // Asientos del 0 al 24
+                    String asientoKey = key + numero; // Combinación letra + número
+                    if (hashmap.containsKey(asientoKey)) {
+                        hayAsientos = true; // Al menos un asiento existe
+                        break; // No es necesario seguir buscando
+                    }
+                }
+                if (hayAsientos) {
+                    ComboAsientoAbecedario.addItem(key); // Agregar letra si tiene asientos
+                }
             }
 
-            ComboAsiento.setRenderer(new DefaultListCellRenderer() {
+            // Llenar ComboAsientoNumero con números del 0 al 24 según el HashMap
+            for (int numero = 0; numero < 25; numero++) { // Cambié 0-24 para los números
+                String key = String.valueOf(numero);
+                // Solo agregar si existe en el hashmap al menos una letra
+                boolean hayAsientos = false;
+                for (char letra = 'A'; letra <= 'Z'; letra++) {
+                    String asientoKey = letra + key; // Combinación letra + número
+                    if (hashmap.containsKey(asientoKey)) {
+                        hayAsientos = true; // Al menos un asiento existe
+                        break; // No es necesario seguir buscando
+                    }
+                }
+                if (hayAsientos) {
+                    ComboAsientoNumero.addItem(key); // Agregar número si tiene asientos
+                }
+            }
+
+            // Aplicar renderizador a ambos JComboBox
+            aplicarRenderizador(ComboAsientoAbecedario, true);
+            aplicarRenderizador(ComboAsientoNumero, false);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this.formPrincipal, "Error al inicializar el formulario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    // Renderizador personalizado para desactivar las opciones
+    private void aplicarRenderizador(JComboBox<String> comboBox, boolean isLetras) {
+        comboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                // Asegurarse de que el valor no sea nulo antes de usar toString()
                 if (value != null) {
                     String key = value.toString();
-
-                    // Verificar si el valor existe en el HashMap y asignar "0" si no existe
-                    String asientoStatus = hashmap.getOrDefault(key, "0");
-
-                    if ("1".equals(asientoStatus)) {
-                        // Mostrar que el asiento está deshabilitado en gris
-                        c.setForeground(Color.GRAY);
+                    if (isLetras) {
+                        // Para las letras, verificar los números asociados
+                        boolean letraActiva = false;
+                        for (int numero = 0; numero < 25; numero++) {
+                            String asientoKey = key + numero; // Combinación letra + número
+                            if (hashmap.containsKey(asientoKey) && "0".equals(hashmap.get(asientoKey))) {
+                                letraActiva = true; // Al menos un número está activo
+                                break;
+                            }
+                        }
+                        // Deshabilitar la letra si no hay asientos disponibles
+                        if (!letraActiva) {
+                            c.setForeground(Color.GRAY); // Deshabilitar en gris
+                        } else {
+                            c.setForeground(Color.BLACK); // Activo en negro
+                        }
                     } else {
-                        // Mostrar asientos disponibles en negro
-                        c.setForeground(Color.BLACK);
+                        // Para los números, verificar su propio estado
+                        String asientoStatus = hashmap.getOrDefault(key, "0");
+                        if ("1".equals(asientoStatus)) {
+                            c.setForeground(Color.GRAY); // Deshabilitar en gris
+                        } else {
+                            c.setForeground(Color.BLACK); // Activo en negro
+                        }
                     }
                 } else {
-                    // Manejo en caso de que el valor sea nulo (opcional, dependiendo de la lógica)
                     c.setForeground(Color.BLACK); // Color predeterminado para elementos nulos
                 }
 
                 return c;
             }
         });
-                        
-            ordenarComboBox(ComboAsiento);
-        
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al guardar el pasajero: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
     }
-    // Renderizador personalizado para desactivar las opciones con valor "1"
-    
-    private void ordenarComboBox(JComboBox<String> comboBox) {
-        // Obtener los elementos actuales
-        List<String> items = new ArrayList<>();
-        for (int i = 0; i < comboBox.getItemCount(); i++) {
-            items.add(comboBox.getItemAt(i)); // Agregar cada elemento a la lista
-        }
 
-        // Ordenar la lista
-        Collections.sort(items); // Ordenar alfabéticamente
-
-        // Limpiar el JComboBox y volver a agregar los elementos ordenados
-        comboBox.removeAllItems(); // Limpiar el JComboBox
-        for (String item : items) {
-            comboBox.addItem(item); // Agregar los elementos ordenados
-        }
-    }
+//    // Método para ordenar los elementos del JComboBox alfabéticamente
+//    private void ordenarComboBox(JComboBox<String> comboBox) {
+//        // Obtener los elementos actuales en una lista
+//        List<String> items = new ArrayList<>();
+//        for (int i = 0; i < comboBox.getItemCount(); i++) {
+//            items.add(comboBox.getItemAt(i));
+//        }
+//
+//        // Ordenar la lista alfabéticamente
+//        Collections.sort(items);
+//
+//        // Limpiar y volver a agregar los elementos ordenados
+//        comboBox.removeAllItems();
+//        for (String item : items) {
+//            comboBox.addItem(item);
+//        }
+//    }
     
     
 
@@ -114,8 +160,9 @@ public class Form_Pasajero extends javax.swing.JFrame {
         TxtNombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        ComboAsiento = new javax.swing.JComboBox<>();
+        ComboAsientoAbecedario = new javax.swing.JComboBox<>();
         BtnGuardar = new javax.swing.JButton();
+        ComboAsientoNumero = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,7 +172,7 @@ public class Form_Pasajero extends javax.swing.JFrame {
 
         jLabel3.setText("Asientos disponibles");
 
-        ComboAsiento.setSelectedItem(hashmap);
+        ComboAsientoAbecedario.setSelectedItem(hashmap);
 
         BtnGuardar.setText("GUARDAR");
         BtnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -133,6 +180,8 @@ public class Form_Pasajero extends javax.swing.JFrame {
                 BtnGuardarActionPerformed(evt);
             }
         });
+
+        ComboAsientoNumero.setSelectedItem(hashmap);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,11 +192,14 @@ public class Form_Pasajero extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(TxtNombre)
                     .addComponent(TxtDocumento)
-                    .addComponent(ComboAsiento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ComboAsientoAbecedario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ComboAsientoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(64, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -164,7 +216,9 @@ public class Form_Pasajero extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ComboAsiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComboAsientoAbecedario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboAsientoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                 .addComponent(BtnGuardar)
                 .addGap(35, 35, 35))
@@ -177,44 +231,57 @@ public class Form_Pasajero extends javax.swing.JFrame {
         try {
             String nombre = TxtNombre.getText();
             String documento = TxtDocumento.getText();
-            if(nombre.equals("")){
+
+            if (nombre.equals("")) {
                 JOptionPane.showMessageDialog(this, "Por favor, digita un nombre", "Alerta", JOptionPane.ERROR_MESSAGE);
                 return;
             } 
-            if(documento.equals("")){
+            if (documento.equals("")) {
                 JOptionPane.showMessageDialog(this, "Por favor, digita un documento", "Alerta", JOptionPane.ERROR_MESSAGE);
                 return;
             } 
-            // Verificar si el ComboBox está habilitado y si se ha seleccionado un asiento
-            if (!ComboAsiento.isEnabled() || ComboAsiento.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(this, "Por favor, selecciona un asiento válido.", "Error", JOptionPane.ERROR_MESSAGE);
-                return; // Salir del método si no hay asiento seleccionado o ComboBox desactivado
-            } else {
-                // Verificación al momento de hacer la selección
-            String asiento = (String) ComboAsiento.getSelectedItem();
 
-            if (asiento == null) {
-                // Si no hay selección
+            // Verificar si el ComboBox de letras está habilitado y si se ha seleccionado un asiento
+            if (!ComboAsientoAbecedario.isEnabled() || ComboAsientoAbecedario.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un asiento válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; 
+            } 
+
+            // Verificar si el ComboBox de números está habilitado y si se ha seleccionado un número
+            if (!ComboAsientoNumero.isEnabled() || ComboAsientoNumero.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un número de asiento válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; 
+            } 
+
+            // Obtener los valores seleccionados
+            String letraAsiento = (String) ComboAsientoAbecedario.getSelectedItem();
+            String numeroAsiento = (String) ComboAsientoNumero.getSelectedItem();
+
+            if (letraAsiento == null || numeroAsiento == null) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un asiento.", "Error", JOptionPane.ERROR_MESSAGE);
-                return; // Salir del método si no hay selección
+                return; 
             }
+
+            // Combinar letra y número para verificar el estado
+            String keyAsiento = letraAsiento + numeroAsiento;
 
             // Verificar el estado del asiento en el HashMap
-            String asientoStatus = hashmap.getOrDefault(asiento, "0");
+            String asientoStatus = hashmap.getOrDefault(keyAsiento, "0");
 
             if ("1".equals(asientoStatus)) {
-                // Si el asiento está marcado como deshabilitado, mostrar mensaje y no crear el objeto Pasajero
+                // Si el asiento está marcado como deshabilitado, mostrar mensaje
                 JOptionPane.showMessageDialog(this, "Este asiento no está disponible. Por favor, selecciona otro.", "Asiento No Disponible", JOptionPane.ERROR_MESSAGE);
-                ComboAsiento.setSelectedIndex(-1); // Resetea la selección
-                return; // Salir del método para no crear el objeto Pasajero
+                ComboAsientoAbecedario.setSelectedIndex(-1); // Resetea la selección
+                return; 
             }
 
-            // Si el asiento está disponible, continuar y crear el objeto Pasajero
-            Pasajero pasajero = new Pasajero(nombre, documento, asiento);
+            // Si el asiento está disponible, crear el objeto Pasajero
+            Pasajero pasajero = new Pasajero(nombre, documento, keyAsiento);
             formPrincipal.AsignarPasajero(hashmap, pasajero);
             this.dispose(); // Cierra el formulario correctamente
-            }
+
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al guardar el pasajero: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_BtnGuardarActionPerformed
@@ -256,7 +323,8 @@ public class Form_Pasajero extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnGuardar;
-    private javax.swing.JComboBox<String> ComboAsiento;
+    private javax.swing.JComboBox<String> ComboAsientoAbecedario;
+    private javax.swing.JComboBox<String> ComboAsientoNumero;
     private javax.swing.JTextField TxtDocumento;
     private javax.swing.JTextField TxtNombre;
     private javax.swing.JLabel jLabel1;
