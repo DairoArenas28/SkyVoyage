@@ -68,9 +68,8 @@ public class Form_Principal extends javax.swing.JFrame {
 
         // Actualizar los asientos en el HashMap según el pasajero
         avion.LlenarAsiento(hashmap, pasajero);
+        
         avion.VisualizarHashMap(hashmap);
-        // Validar y actualizar el estado de los JCheckBox según el HashMap
-        avion.ValidarAsiento(hashmap,checkBoxes);
         
     }
     
@@ -93,6 +92,7 @@ public class Form_Principal extends javax.swing.JFrame {
             pasajero.getAsiento()
         });
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,6 +114,7 @@ public class Form_Principal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         nAsientos = new javax.swing.JTextField();
         btnGenerar = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -170,18 +171,30 @@ public class Form_Principal extends javax.swing.JFrame {
             }
         });
 
+        btnActualizar.setBackground(new java.awt.Color(153, 255, 153));
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelCheckBoxLayout = new javax.swing.GroupLayout(PanelCheckBox);
         PanelCheckBox.setLayout(PanelCheckBoxLayout);
         PanelCheckBoxLayout.setHorizontalGroup(
             PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelCheckBoxLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(38, 38, 38)))
+                .addContainerGap()
+                .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelCheckBoxLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(38, 38, 38))))
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         PanelCheckBoxLayout.setVerticalGroup(
@@ -193,7 +206,9 @@ public class Form_Principal extends javax.swing.JFrame {
                 .addComponent(nAsientos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGenerar)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnActualizar)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -284,6 +299,12 @@ public class Form_Principal extends javax.swing.JFrame {
         Avion.repaint();    // Asegura que se dibuje correctamente
     }//GEN-LAST:event_btnGenerarActionPerformed
 
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // TODO add your handling code here:
+        // Validar y actualizar el estado de los JCheckBox según el HashMap
+        avion.ValidarAsiento(hashmap,checkBoxes);
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,6 +346,7 @@ public class Form_Principal extends javax.swing.JFrame {
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JPanel PanelCheckBox;
     private javax.swing.JTable TablePasajero;
+    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnGenerar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

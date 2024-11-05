@@ -56,36 +56,40 @@ public class Avion {
 }
     
     public final void ValidarAsiento(HashMap<String, String> hashmap, JCheckBox[] checkBoxes) {
+        if (checkBoxes == null) {
+            System.out.println("El arreglo checkBoxes es nulo.");
+            return;
+        }
+
+        System.out.println("Tamaño de checkBoxes: " + checkBoxes.length);
+
         int maxAsientos = 25; // Número máximo de asientos por letra
-        int maxLetras = abecedario.length; // Número total de letras en el abecedario
+        char[] abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); // Abecedario para las letras de fila
+        int maxLetras = abecedario.length;
 
         for (int i = 0; i < checkBoxes.length; i++) {
-            // Asegúrate de que i esté dentro de los límites del abecedario
-            if (i / maxAsientos < maxLetras) {
-                String letra = abecedario[i / maxAsientos];
-                int numero = i % maxAsientos;
+            if (i / maxAsientos < maxLetras) { // Verifica que `i` esté dentro de los límites
+                String letra = String.valueOf(abecedario[i / maxAsientos]);
+                int numero = i % maxAsientos + 1; // Iniciar asientos desde 1
                 String key = letra + numero;
 
-                // Deshabilitar el checkbox
-                checkBoxes[i].setEnabled(false); // Deshabilitar el checkbox
+                checkBoxes[i].setEnabled(false); // Deshabilita el checkbox
 
                 if (hashmap.containsKey(key)) {
-                    // Seleccionar el checkbox si el valor es "1"
                     checkBoxes[i].setSelected("1".equals(hashmap.get(key)));
                 } else {
-                    // Asegurarse de que esté deseleccionado si la clave no está en el hashmap
                     checkBoxes[i].setSelected(false);
                 }
             }
         }
     }
     
-    public static void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
+    public void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
         System.out.println(pasajero.getAsiento());
         hashmap.put(pasajero.getAsiento(),"1");
     }
     
-    public static void LlenarAsiento(int nAsientos,HashMap hashmap){
+    public void LlenarAsiento(int nAsientos,HashMap hashmap){
         // Ciclo para recorrer las checkboxes
         for (int i = 0; i < nAsientos; i++) {
             String letra = abecedario[i / 25];
@@ -118,9 +122,9 @@ public class Avion {
         }
 
         // Aquí puedes llamar a ValidarAsiento con tu HashMap
-        HashMap<String, String> hashmap = new HashMap<>();
+        //HashMap<String, String> hashmap = new HashMap<>();
         // Asegúrate de llenar el hashmap con las claves y valores necesarios aquí.
-        ValidarAsiento(hashmap, checkBoxes);
+        //ValidarAsiento(hashmap, checkBoxes);
     }
     
     public void EliminarAvion(HashMap<String, String> hashmap, JCheckBox[] checkBoxes, JLabel avion) {
