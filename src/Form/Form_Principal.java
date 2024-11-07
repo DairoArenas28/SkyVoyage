@@ -30,9 +30,9 @@ public class Form_Principal extends javax.swing.JFrame {
     DefaultTableModel model_;
     
     String url = "jdbc:sqlserver://localhost:1433;";
-    String database = "Facturacion";
+    String database = "SkyVoyage";
     String user = "sa";
-    String password = "123456789";
+    String password = "12345";
     int nAsiento;
     
     DatabaseConnection conn = new DatabaseConnection(url,database,user,password);
