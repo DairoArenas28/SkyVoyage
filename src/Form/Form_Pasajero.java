@@ -278,7 +278,7 @@ public class Form_Pasajero extends javax.swing.JFrame {
             // Si el asiento está disponible, crear el objeto Pasajero
             Pasajero pasajero = new Pasajero(nombre, documento, keyAsiento);
             formPrincipal.AsignarPasajero(hashmap, pasajero);
-            this.dispose(); // Cierra el formulario correctamente
+            this.hide(); // Cierra el formulario correctamente
 
         } catch (Exception e) {
             e.printStackTrace();

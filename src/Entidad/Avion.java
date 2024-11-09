@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 public class Avion {
 
     int asientos;
+    JCheckBox[] checkBoxes ;
     static String[] abecedario = new String[]{
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
         "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
@@ -55,7 +56,7 @@ public class Avion {
     }
 }
     
-    public final void ValidarAsiento(HashMap<String, String> hashmap, JCheckBox[] checkBoxes) {
+    public final void ValidarAsiento(HashMap<String, String> hashmap) {
         if (checkBoxes == null) {
             System.out.println("El arreglo checkBoxes es nulo.");
             return;
@@ -74,7 +75,7 @@ public class Avion {
                 String key = letra + numero;
 
                 checkBoxes[i].setEnabled(false); // Deshabilita el checkbox
-
+                String nKey = hashmap.get(key);
                 if (hashmap.containsKey(key)) {
                     checkBoxes[i].setSelected("1".equals(hashmap.get(key)));
                 } else {
@@ -87,6 +88,7 @@ public class Avion {
     public void LlenarAsiento(HashMap hashmap,Pasajero pasajero){
         System.out.println(pasajero.getAsiento());
         hashmap.put(pasajero.getAsiento(),"1");
+        VisualizarHashMap(hashmap);
     }
     
     public void LlenarAsiento(int nAsientos,HashMap hashmap){
@@ -99,7 +101,7 @@ public class Avion {
         }
     }
     
-   public void GenerarAvion(int nAsiento, JCheckBox[] checkBoxes, JLabel avion) {
+   public void GenerarAvion(int nAsiento, JLabel avion) {
         checkBoxes = new JCheckBox[nAsiento];
         // Cambia el layout a GridLayout, especificando cuántas filas deseas
         int filas = 10; // Número de filas que quieres en tu disposición
@@ -120,14 +122,14 @@ public class Avion {
             // Imprimir el nombre para verificar
             System.out.println("Checkbox creado: " + nombre);
         }
-
+        System.out.println("Cantidad:" + checkBoxes.length);
         // Aquí puedes llamar a ValidarAsiento con tu HashMap
         //HashMap<String, String> hashmap = new HashMap<>();
         // Asegúrate de llenar el hashmap con las claves y valores necesarios aquí.
         //ValidarAsiento(hashmap, checkBoxes);
     }
     
-    public void EliminarAvion(HashMap<String, String> hashmap, JCheckBox[] checkBoxes, JLabel avion) {
+    public void EliminarAvion(HashMap<String, String> hashmap, JLabel avion) {
          // Quita el layout actual
         avion.removeAll(); 
 

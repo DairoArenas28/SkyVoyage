@@ -26,7 +26,7 @@ public class Form_Principal extends javax.swing.JFrame {
     /**
      * Creates new form Form_Principal
      */
-    JCheckBox[] checkBoxes;
+    
     DefaultTableModel model_;
     
     String url = "jdbc:sqlserver://localhost:1433;";
@@ -40,7 +40,7 @@ public class Form_Principal extends javax.swing.JFrame {
     Avion avion = new Avion();
     
     public Form_Principal() {
-        this.checkBoxes = new JCheckBox[0];
+        
         initComponents();
         //this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
         //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};g
@@ -68,6 +68,9 @@ public class Form_Principal extends javax.swing.JFrame {
 
         // Actualizar los asientos en el HashMap según el pasajero
         avion.LlenarAsiento(hashmap, pasajero);
+        System.out.println("Cantidad de chetbox");
+        
+        avion.ValidarAsiento(hashmap);
         
         avion.VisualizarHashMap(hashmap);
         
@@ -273,7 +276,7 @@ public class Form_Principal extends javax.swing.JFrame {
         
         hashmap.put(asientoPasajero,"0");
         
-        avion.ValidarAsiento(hashmap,checkBoxes);
+        avion.ValidarAsiento(hashmap);
         //System.out.println(asientoPasajero);
         if(filaseleccionada != -1){
             model_.removeRow(filaseleccionada);
@@ -283,13 +286,14 @@ public class Form_Principal extends javax.swing.JFrame {
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         // Recuperar el número de asientos del campo de texto
+        
         nAsiento = Integer.parseInt(nAsientos.getText());
-
+        
         // Eliminar checkboxes existentes y limpiar el HashMap
-        avion.EliminarAvion(hashmap, checkBoxes, Avion);
+        avion.EliminarAvion(hashmap, Avion);
 
         // Generar nuevos checkboxes para los asientos
-        avion.GenerarAvion(nAsiento, checkBoxes, Avion);
+        avion.GenerarAvion(nAsiento, Avion);
 
         // Llenar los checkboxes con la información del HashMap
         avion.LlenarAsiento(nAsiento, hashmap);
@@ -302,7 +306,7 @@ public class Form_Principal extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         // Validar y actualizar el estado de los JCheckBox según el HashMap
-        avion.ValidarAsiento(hashmap,checkBoxes);
+        avion.ValidarAsiento(hashmap);
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     /**
