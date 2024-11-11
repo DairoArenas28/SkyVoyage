@@ -9,22 +9,17 @@ package Entidad;
  * @author Dairo Arenas
  */
 public class Pasajero {
-    private String nombre;
+    private int id;
     private String documento;
-    private String asiento;
+    private String nombre;
+    private String apellido;
+    private int edad;
 
-    public Pasajero(String nombre, String documento, String asiento) {
-        this.nombre = nombre;
+    public Pasajero(String documento, String nombre, String apellido, int edad) {
         this.documento = documento;
-        this.asiento = asiento;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
         this.nombre = nombre;
+        this.apellido = apellido;
+        this.edad = edad;
     }
 
     public String getDocumento() {
@@ -35,13 +30,33 @@ public class Pasajero {
         this.documento = documento;
     }
 
-    public String getAsiento() {
-        return asiento;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setAsiento(String asiento) {
-        this.asiento = asiento;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+    
+    
+
+    
 
     
     

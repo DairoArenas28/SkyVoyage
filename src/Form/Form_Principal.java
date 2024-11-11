@@ -8,7 +8,7 @@ import Clases.DatabaseConnection;
 import Entidad.Avion;
 import Entidad.Pasajero;
 import java.awt.FlowLayout;
-import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -35,44 +35,22 @@ public class Form_Principal extends javax.swing.JFrame {
     String password = "12345";
     int nAsiento;
     
-    DatabaseConnection conn = new DatabaseConnection(url,database,user,password);
+    DatabaseConnection dbConn = new DatabaseConnection(url,database,user,password);
     
     Avion avion = new Avion();
     
     public Form_Principal() {
         
         initComponents();
+        ObtenerAvion();
         //this.checkBoxesA = new JCheckBox[]{A1, A2, A3, A4, A5};
         //this.checkBoxesB = new JCheckBox[]{B1, B2, B3, B4, B5};g
         this.setLocationRelativeTo(null);
        
-        
-        try(Connection con = conn.Connection()){
-            if(con != null ){
-                System.out.println("Conexión exitosa");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 //Hola
     public void AsignarPasajero(HashMap hashmap,Pasajero pasajero) {
-        // Crear el DefaultTableModel
-        model_ = TableModel(); // Asegúrate de que TableModel() retorne el modelo correctamente
-
-        // Llenar el modelo con los datos del pasajero
-        LLenarModel(model_, pasajero); 
-
-        // Establecer el modelo en la tabla
-        TablePasajero.setModel(model_);
-
-        // Actualizar los asientos en el HashMap según el pasajero
-        avion.LlenarAsiento(hashmap, pasajero);
-        System.out.println("Cantidad de chetbox");
         
-        avion.ValidarAsiento(hashmap);
-        
-        avion.VisualizarHashMap(hashmap);
         
     }
     
@@ -92,10 +70,42 @@ public class Form_Principal extends javax.swing.JFrame {
         model.addRow(new Object[]{
             pasajero.getDocumento(), 
             pasajero.getNombre(), 
-            pasajero.getAsiento()
         });
     }
     
+    public void ObtenerAvion() {
+        // Asegúrate de que dbConn esté correctamente inicializado antes de usarlo
+        try {
+            // Obtener los registros de la tabla "Avion" utilizando el rowMapper
+            List<Avion> aviones = dbConn.obtenerRegistros("Avion", Avion.rowMapper());
+
+            // Limpiar el JComboBox antes de llenarlo
+            cAvion.removeAllItems();
+
+            // Llenar el JComboBox con los aviones (puedes elegir mostrar la placa o el ID)
+            for (Avion avion : aviones) {
+                // Puedes agregar el ID o la placa del avión
+                cAvion.addItem(
+                        "Placa: " + avion.getPlaca() + 
+                        " Fecha Entrada: " + avion.getFechaEntrada() + 
+                        " Fecha Salida: " + avion.getFechaSalida() + 
+                        " Asientos: " + avion.getAsiento()
+                );
+            }
+            // Mostrar los aviones obtenidos
+            /*for (Avion avion : aviones) {
+                System.out.println("ID: " + avion.getId());
+                System.out.println("Placa: " + avion.getPlaca());
+                System.out.println("Fecha Entrada: " + avion.getFechaEntrada());
+                System.out.println("Fecha Salida: " + avion.getFechaSalida());
+                System.out.println("Cantidad de Asientos: " + avion.getAsiento());
+                System.out.println();
+            }*/
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -108,16 +118,14 @@ public class Form_Principal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
-        Avion = new javax.swing.JLabel();
-        BtnAsignar = new javax.swing.JButton();
+        labelAvion = new javax.swing.JLabel();
+        btnReasignar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         TablePasajero = new javax.swing.JTable();
-        BtnEliminar = new javax.swing.JButton();
-        PanelCheckBox = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        nAsientos = new javax.swing.JTextField();
-        btnGenerar = new javax.swing.JButton();
-        btnActualizar = new javax.swing.JButton();
+        btnAvion = new javax.swing.JButton();
+        btnIngresar = new javax.swing.JButton();
+        cAvion = new javax.swing.JComboBox<>();
+        btnEliminarPasajero = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -126,13 +134,13 @@ public class Form_Principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(Avion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 230));
+        jPanel1.add(labelAvion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 740, 210));
 
-        BtnAsignar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        BtnAsignar.setText("Asignar Asiento");
-        BtnAsignar.addActionListener(new java.awt.event.ActionListener() {
+        btnReasignar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnReasignar.setText("Reasignar");
+        btnReasignar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnAsignarActionPerformed(evt);
+                btnReasignarActionPerformed(evt);
             }
         });
 
@@ -141,11 +149,11 @@ public class Form_Principal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Documento", "Nombre", "Asiento"
+                "Documento", "Nombre", "Apellido", "Edad", "Asiento"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -154,160 +162,106 @@ public class Form_Principal extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(TablePasajero);
 
-        BtnEliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        BtnEliminar.setText("Eliminar");
-        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+        btnAvion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAvion.setText("Avion");
+        btnAvion.setPreferredSize(new java.awt.Dimension(81, 27));
+        btnAvion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnEliminarActionPerformed(evt);
+                btnAvionActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Cantidad Asientos");
-
-        nAsientos.setText("0");
-
-        btnGenerar.setBackground(new java.awt.Color(153, 255, 153));
-        btnGenerar.setText("Generar");
-        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+        btnIngresar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnIngresar.setText("Ingresar");
+        btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerarActionPerformed(evt);
+                btnIngresarActionPerformed(evt);
             }
         });
 
-        btnActualizar.setBackground(new java.awt.Color(153, 255, 153));
-        btnActualizar.setText("Actualizar");
-        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+        cAvion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cAvion.setToolTipText("");
+
+        btnEliminarPasajero.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEliminarPasajero.setText("Eliminar");
+        btnEliminarPasajero.setPreferredSize(new java.awt.Dimension(81, 27));
+        btnEliminarPasajero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarActionPerformed(evt);
+                btnEliminarPasajeroActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout PanelCheckBoxLayout = new javax.swing.GroupLayout(PanelCheckBox);
-        PanelCheckBox.setLayout(PanelCheckBoxLayout);
-        PanelCheckBoxLayout.setHorizontalGroup(
-            PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelCheckBoxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelCheckBoxLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(nAsientos, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCheckBoxLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(38, 38, 38))))
-                    .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        PanelCheckBoxLayout.setVerticalGroup(
-            PanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelCheckBoxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nAsientos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnGenerar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnActualizar)
-                .addContainerGap())
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(10, 10, 10)
+                        .addComponent(cAvion, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnReasignar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnEliminarPasajero, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAvion, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(10, 10, 10)
+                .addComponent(cAvion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnAsignar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(PanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                    .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReasignar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnEliminarPasajero, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAvion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnAsignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAsignarActionPerformed
+    private void btnReasignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReasignarActionPerformed
     
-        // Verificar que el hashmap no esté vacío
-        if (hashmap == null || hashmap.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No hay asientos disponibles para asignar.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Salir si no hay datos
-        }
+        
+    }//GEN-LAST:event_btnReasignarActionPerformed
 
-        // Crear y mostrar el formulario de pasajero
-        Form_Pasajero pasajero = new Form_Pasajero(hashmap, Form_Principal.this);
+    private void btnAvionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvionActionPerformed
+        Form_Avion avion = new Form_Avion(dbConn);
+        avion.setVisible(true);
+        avion.setLocationRelativeTo(null);
+        avion.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }//GEN-LAST:event_btnAvionActionPerformed
+
+    private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
+        // TODO add your handling code here:
+        Form_Pasajero pasajero = new Form_Pasajero(dbConn);
+        pasajero.pack();
         pasajero.setVisible(true);
         pasajero.setLocationRelativeTo(null);
         pasajero.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    }//GEN-LAST:event_BtnAsignarActionPerformed
+    }//GEN-LAST:event_btnIngresarActionPerformed
 
-    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
-        int filaseleccionada = TablePasajero.getSelectedRow();
-        String asientoPasajero;
-        //tableEstudiante.remove
-        model_ = TableModel();
-        
-        asientoPasajero = model_.getValueAt(filaseleccionada, 2).toString();
-        
-        hashmap.put(asientoPasajero,"0");
-        
-        avion.ValidarAsiento(hashmap);
-        //System.out.println(asientoPasajero);
-        if(filaseleccionada != -1){
-            model_.removeRow(filaseleccionada);
-        }
-        JOptionPane.showMessageDialog(null, "Registro eliminado");
-    }//GEN-LAST:event_BtnEliminarActionPerformed
-
-    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-        // Recuperar el número de asientos del campo de texto
-        
-        nAsiento = Integer.parseInt(nAsientos.getText());
-        
-        // Eliminar checkboxes existentes y limpiar el HashMap
-        avion.EliminarAvion(hashmap, Avion);
-
-        // Generar nuevos checkboxes para los asientos
-        avion.GenerarAvion(nAsiento, Avion);
-
-        // Llenar los checkboxes con la información del HashMap
-        avion.LlenarAsiento(nAsiento, hashmap);
-
-        // Actualizar la interfaz
-        Avion.revalidate(); // Refresca el contenedor
-        Avion.repaint();    // Asegura que se dibuje correctamente
-    }//GEN-LAST:event_btnGenerarActionPerformed
-
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+    private void btnEliminarPasajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPasajeroActionPerformed
         // TODO add your handling code here:
-        // Validar y actualizar el estado de los JCheckBox según el HashMap
-        avion.ValidarAsiento(hashmap);
-    }//GEN-LAST:event_btnActualizarActionPerformed
+    }//GEN-LAST:event_btnEliminarPasajeroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,18 +299,16 @@ public class Form_Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Avion;
-    private javax.swing.JButton BtnAsignar;
-    private javax.swing.JButton BtnEliminar;
-    private javax.swing.JPanel PanelCheckBox;
     private javax.swing.JTable TablePasajero;
-    private javax.swing.JButton btnActualizar;
-    private javax.swing.JButton btnGenerar;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnAvion;
+    private javax.swing.JButton btnEliminarPasajero;
+    private javax.swing.JButton btnIngresar;
+    private javax.swing.JButton btnReasignar;
+    private javax.swing.JComboBox<String> cAvion;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField nAsientos;
+    private javax.swing.JLabel labelAvion;
     // End of variables declaration//GEN-END:variables
 }
