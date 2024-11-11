@@ -4,6 +4,7 @@
  */
 package Clases;
 
+import Entidad.PasajeroAvionInfo;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -110,6 +111,92 @@ public class DatabaseConnection<T> {
         }
         return registros;
     }
+    
+    public List<String> obtenerAsientosOcupadosPorAvion(int avionId) {
+        String sql = "SELECT AsientoLetra, AsientoNumero FROM AvionDetalle WHERE AvionId = ? AND Inactivo = 1";
+        List<String> asientosOcupados = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, avionId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String asiento = rs.getString("AsientoLetra") + rs.getInt("AsientoNumero");
+                    asientosOcupados.add(asiento);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return asientosOcupados;
+    }
+    
+    public List<String> obtenerNombresAsientosPorAvion(int avionId) {
+        String sql = "SELECT AsientoLetra, AsientoNumero FROM AvionDetalle WHERE AvionId = ? ORDER BY AsientoLetra, AsientoNumero";
+        List<String> nombresAsientos = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, avionId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String asiento = rs.getString("AsientoLetra") + rs.getInt("AsientoNumero");
+                    nombresAsientos.add(asiento);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nombresAsientos;
+    }
+    
+    public int obtenerCantidadAsientosPorAvion(int avionId) {
+        String sql = "SELECT Asiento FROM Avion WHERE Id = ?";
+        int cantidadAsientos = 0;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, avionId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    cantidadAsientos = rs.getInt("Asiento");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cantidadAsientos;
+    }
+    
+    public List<PasajeroAvionInfo> obtenerInformacionPasajerosPorAvion(int avionId) {
+        List<PasajeroAvionInfo> resultado = new ArrayList<>();
+        String sql = "SELECT p.Documento, p.Nombre, p.Apellido, a.Placa, " +
+                     "CONCAT(ad.AsientoLetra, ad.AsientoNumero) AS Asiento " +
+                     "FROM Pasajero p " +
+                     "JOIN AvionDetalle ad ON p.Id = ad.PasajeroId " +
+                     "JOIN Avion a ON ad.AvionId = a.Id " +
+                     "WHERE ad.Inactivo = 1 AND a.Id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, avionId);  // Asigna el valor del id del avión al parámetro de la consulta
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String documento = rs.getString("Documento");
+                    String nombre = rs.getString("Nombre");
+                    String apellido = rs.getString("Apellido");
+                    String placaAvion = rs.getString("Placa");
+                    String asiento = rs.getString("Asiento");
+
+                    resultado.add(new PasajeroAvionInfo(documento, nombre, apellido, placaAvion, asiento));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultado;
+    }
+
     // Método genérico para obtener un registro por ID
     public T obtenerRegistroPorId(String tableName, String idColumnName, int id, RowMapper<T> mapper) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE " + idColumnName + " = ?";
