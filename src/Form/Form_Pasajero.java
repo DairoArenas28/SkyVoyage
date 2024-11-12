@@ -121,8 +121,8 @@ public class Form_Pasajero extends javax.swing.JFrame {
                         numeroAsiento = Integer.parseInt(numero);
 
                         // Mostrar los resultados en consola
-                        System.out.println("Letra del asiento: " + letraAsiento);
-                        System.out.println("Número del asiento: " + numeroAsiento);
+                        //System.out.println("Letra del asiento: " + letraAsiento);
+                        //System.out.println("Número del asiento: " + numeroAsiento);
 
                         // Ahora puedes usar la letra y el número del asiento, por ejemplo, para asignarlo al pasajero
                     }

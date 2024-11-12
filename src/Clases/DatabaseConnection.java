@@ -233,4 +233,14 @@ public class DatabaseConnection<T> {
         }
     }
     
+    // Método genérico para eliminar un registro por ID
+    public boolean eliminarRegistroPorColumna(String tableName, String stringColumnName, String campo) throws SQLException {
+        String query = "DELETE FROM " + tableName + " WHERE " + stringColumnName + " = ?";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, campo);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+    
 }

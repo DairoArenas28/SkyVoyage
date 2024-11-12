@@ -9,11 +9,14 @@ import Clases.DatabaseConnection;
 import Entidad.Avion;
 import Entidad.Pasajero;
 import Entidad.PasajeroAvionInfo;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -180,10 +183,11 @@ public class Form_Principal extends javax.swing.JFrame {
         btnReasignar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablePasajero = new javax.swing.JTable();
-        btnAvion = new javax.swing.JButton();
+        btnEliminarAvion = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
         cAvion = new javax.swing.JComboBox<>();
         btnEliminarPasajero = new javax.swing.JButton();
+        btnAvion1 = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -224,15 +228,15 @@ public class Form_Principal extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(9, 295, 740, 230));
 
-        btnAvion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnAvion.setText("Avion");
-        btnAvion.setPreferredSize(new java.awt.Dimension(81, 27));
-        btnAvion.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarAvion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEliminarAvion.setText("X");
+        btnEliminarAvion.setPreferredSize(new java.awt.Dimension(81, 27));
+        btnEliminarAvion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAvionActionPerformed(evt);
+                btnEliminarAvionActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAvion, new org.netbeans.lib.awtextra.AbsoluteConstraints(649, 260, 100, 30));
+        getContentPane().add(btnEliminarAvion, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 260, 30, 30));
 
         btnIngresar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnIngresar.setText("Ingresar");
@@ -257,6 +261,16 @@ public class Form_Principal extends javax.swing.JFrame {
         });
         getContentPane().add(btnEliminarPasajero, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 260, 100, 30));
 
+        btnAvion1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAvion1.setText("Avion");
+        btnAvion1.setPreferredSize(new java.awt.Dimension(81, 27));
+        btnAvion1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAvion1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAvion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 260, 100, 30));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -265,12 +279,9 @@ public class Form_Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnReasignarActionPerformed
 
-    private void btnAvionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvionActionPerformed
-        Form_Avion avion = new Form_Avion(dbConn);
-        avion.setVisible(true);
-        avion.setLocationRelativeTo(null);
-        avion.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    }//GEN-LAST:event_btnAvionActionPerformed
+    private void btnEliminarAvionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAvionActionPerformed
+        
+    }//GEN-LAST:event_btnEliminarAvionActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
@@ -282,8 +293,65 @@ public class Form_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnEliminarPasajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPasajeroActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = tablePasajero.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            // Obtener el ID y nombre del pasajero seleccionado
+            String documento = tablePasajero.getValueAt(filaSeleccionada, 0).toString(); // Columna ID (asumimos que es String)
+            String nombre = tablePasajero.getValueAt(filaSeleccionada, 1).toString(); // Columna Nombre
+
+            // Mostrar mensaje de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea eliminar al pasajero " + nombre + " con Documento " + documento + "?",
+                "Confirmar Eliminación",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                try {
+                    // Llamar al método para eliminar el registro de la base de datos
+                    boolean eliminado = dbConn.eliminarRegistroPorColumna("Pasajero", "Documento", documento);
+
+                    if (eliminado) {
+                        // Eliminar la fila de la tabla
+                        ((DefaultTableModel) tablePasajero.getModel()).removeRow(filaSeleccionada);
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Pasajero eliminado correctamente.",
+                            "Eliminación Exitosa",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "No se pudo eliminar el pasajero. Verifique que el ID sea correcto.",
+                            "Error al Eliminar",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Error al eliminar el pasajero: " + ex.getMessage(),
+                        "Error de Base de Datos",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Por favor, seleccione un pasajero para eliminar.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnEliminarPasajeroActionPerformed
+
+    private void btnAvion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvion1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAvion1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -321,7 +389,8 @@ public class Form_Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAvion;
+    private javax.swing.JButton btnAvion1;
+    private javax.swing.JButton btnEliminarAvion;
     private javax.swing.JButton btnEliminarPasajero;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnReasignar;
