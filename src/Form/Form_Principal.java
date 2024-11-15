@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -38,6 +40,9 @@ public class Form_Principal extends javax.swing.JFrame {
     int nAsiento;
     Avion avionSeleccionado;
     int avionId;
+    
+    String letraAsiento;
+    String numeroAsiento;
     
     DatabaseConnection dbConn = new DatabaseConnection(url,database,user,password);
     
@@ -196,7 +201,17 @@ public class Form_Principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelAsientos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        javax.swing.GroupLayout labelAsientosLayout = new javax.swing.GroupLayout(labelAsientos);
+        labelAsientos.setLayout(labelAsientosLayout);
+        labelAsientosLayout.setHorizontalGroup(
+            labelAsientosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 740, Short.MAX_VALUE)
+        );
+        labelAsientosLayout.setVerticalGroup(
+            labelAsientosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 210, Short.MAX_VALUE)
+        );
+
         getContentPane().add(labelAsientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(9, 40, 740, 210));
 
         btnReasignar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -280,7 +295,33 @@ public class Form_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReasignarActionPerformed
 
     private void btnEliminarAvionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAvionActionPerformed
-        
+        if (avionId != -1) {
+            try {
+                // Mostrar mensaje de confirmación
+                int confirmacion = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Está seguro de que desea eliminar al pasajero " + nombre + " con Documento " + documento + "?",
+                    "Confirmar Eliminación",
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                boolean eliminarAvionDetalleId = dbConn.eliminarRegistroPorId("AvionDetalle", "AvionId", avionId);
+                boolean eliminarAvion = dbConn.eliminarRegistroPorId("Avion", "Id", avionId);
+                
+                if(eliminarAvionDetalleId ){
+                    
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Form_Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Por favor, seleccione un pasajero para eliminar.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnEliminarAvionActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
@@ -299,6 +340,7 @@ public class Form_Principal extends javax.swing.JFrame {
             // Obtener el ID y nombre del pasajero seleccionado
             String documento = tablePasajero.getValueAt(filaSeleccionada, 0).toString(); // Columna ID (asumimos que es String)
             String nombre = tablePasajero.getValueAt(filaSeleccionada, 1).toString(); // Columna Nombre
+            String asiento = tablePasajero.getValueAt(filaSeleccionada, 4).toString(); // Columna Nombre
 
             // Mostrar mensaje de confirmación
             int confirmacion = JOptionPane.showConfirmDialog(
@@ -311,6 +353,9 @@ public class Form_Principal extends javax.swing.JFrame {
             if (confirmacion == JOptionPane.YES_OPTION) {
                 try {
                     // Llamar al método para eliminar el registro de la base de datos
+                    letraAsiento = asiento.replaceAll("[^A-Za-z]", ""); // Extrae la letra
+                    numeroAsiento = asiento.replaceAll("[^0-9]", ""); // Extrae el número
+                    boolean eliminarPasajero = dbConn.actualizarRegistroAvionDetalle(avionId,letraAsiento,numeroAsiento);
                     boolean eliminado = dbConn.eliminarRegistroPorColumna("Pasajero", "Documento", documento);
 
                     if (eliminado) {
@@ -351,6 +396,10 @@ public class Form_Principal extends javax.swing.JFrame {
 
     private void btnAvion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvion1ActionPerformed
         // TODO add your handling code here:
+        Form_Avion avion = new Form_Avion(dbConn);
+        avion.setVisible(true);
+        avion.setLocationRelativeTo(null);
+        avion.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//GEN-LAST:event_btnAvion1ActionPerformed
 
     /**

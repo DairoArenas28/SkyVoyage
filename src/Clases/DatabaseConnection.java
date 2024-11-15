@@ -222,6 +222,17 @@ public class DatabaseConnection<T> {
             return pstmt.executeUpdate() > 0;
         }
     }
+    
+    // Método genérico para actualizar un registro (los campos deben ser definidos en el query)
+    public boolean actualizarRegistroAvionDetalle(Object... params) throws SQLException {
+        String query = "UPDATE AvionDetalle SET Inactivo = null,PasajeroId = null WHERE AvionId = ? AND AsientoLetra = ? AND AsientoNumero = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            for (int i = 0; i < params.length; i++) {
+                pstmt.setObject(i + 1, params[i]);
+            }
+            return pstmt.executeUpdate() > 0;
+        }
+    }
 
     // Método genérico para eliminar un registro por ID
     public boolean eliminarRegistroPorId(String tableName, String idColumnName, int id) throws SQLException {

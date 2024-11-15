@@ -352,12 +352,15 @@ public class Form_Pasajero extends javax.swing.JFrame {
                         System.out.println("Pasajero: " + pasajeroId + " Avion: " + avionId + " Letra " + letraAsiento + " Numero: " + numeroAsiento);
                         boolean actualizado = dbConn.actualizarRegistro(qry, pasajeroId, avionId, letraAsiento, numeroAsiento);
                         if (actualizado) {
-                            System.out.println("El asiento fue actualizado exitosamente.");
+                            //System.out.println("El asiento fue actualizado exitosamente.");
+                            JOptionPane.showMessageDialog(this, "El asiento fue asignado exitosamente.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            System.out.println("No se pudo actualizar el asiento.");
+                            //System.out.println("No se pudo actualizar el asiento.");
+                            JOptionPane.showMessageDialog(this, "No se pudo actualizar el asiento.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (SQLException ex) {
-                        System.out.println("Error al actualizar el asiento: " + ex.getMessage());
+                        //System.out.println("Error al actualizar el asiento: " + ex.getMessage());
+                        JOptionPane.showMessageDialog(this, "Error al actualizar el asiento: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
